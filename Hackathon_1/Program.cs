@@ -21,6 +21,7 @@ namespace CalendarQuickstart
         static string ApplicationName = "Google Calendar API .NET Quickstart";
         //create a list object to store the calendar events
         static List<Event> listOfEvents = new List<Event>();
+        static List<String> listOfEmails = new List<String>();
 
         static void Main(string[] args)
         {
@@ -61,37 +62,61 @@ namespace CalendarQuickstart
             {
                 foreach (var eventItem in events.Items)
                 {
-                    listOfEvents.Add(eventItem);
+                    
+                    string when = eventItem.Start.DateTime.ToString();
+
+                    if (String.IsNullOrEmpty(when))
+                        {
+                            when = eventItem.Start.Date;
+                            DateTime currTime = DateTime.Now;
+                            DateTime appt = DateTime.Parse(when);
+                        if ((currTime.Month == appt.Month && currTime.Day == appt.Day) || (currTime.AddDays(7).Day == appt.Day && currTime.AddDays(7).Month == appt.Month))
+                        {
+                            listOfEvents.Add(eventItem);
+                            Console.WriteLine("{0} ({1})", eventItem.Summary, when,"\n");
+                        }
+                        else
+                        {
+                          Console.WriteLine("");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No upcoming events found.");
+                    }
+                    
+                }
+                //List the attendees
+
+                Console.WriteLine("\nList of Attendees: ");
+
+                foreach (var eventItem in listOfEvents)
+                {
+                    int i = 0;
                     string when = eventItem.Start.DateTime.ToString();
                     if (String.IsNullOrEmpty(when))
                     {
                         when = eventItem.Start.Date;
+                        DateTime currTime = DateTime.Now;
+                        DateTime appt = DateTime.Parse(when);
+                        if ((currTime.Month == appt.Month && currTime.Day == appt.Day) || (currTime.AddDays(7).Day == appt.Day && currTime.AddDays(7).Month == appt.Month))
+                        {
+                            while (i < eventItem.Attendees.Count())
+                            {
+                                string attendee = eventItem.Attendees[i].Email;
+                                listOfEmails.Add(attendee);
+                                Console.WriteLine(attendee);
+                                i++;
+                            }
+                        }
                     }
-                    Console.WriteLine("{0} ({1})", eventItem.Summary, when);
+                    else
+                    {
+                        Console.WriteLine("No Attendees Found");
+                    }
                 }
+                Console.Read();
             }
-            else
-            {
-                Console.WriteLine("No upcoming events found.");
-            }
-         
-
-            //List the attendees
-
-            Console.WriteLine("List of Attendees: ");
-     
-            foreach(var eventItem in listOfEvents)
-            {
-                int i = 0;
-                while (i < eventItem.Attendees.Count())
-                {
-                    string attendee = eventItem.Attendees[i].Email;
-                    Console.WriteLine(attendee);
-                    i++;
-                }
-            }
-
-            Console.Read();
         }
     }
 }
