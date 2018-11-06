@@ -40,7 +40,7 @@ namespace CalendarQuickstart
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
-                    "user",
+                    "something@gmail.com",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
                 Console.WriteLine("Credential file saved to: " + credPath);
@@ -71,9 +71,7 @@ namespace CalendarQuickstart
                     
                     string when = eventItem.Start.DateTime.ToString();
 
-                    if (String.IsNullOrEmpty(when))
-                        {
-                            when = eventItem.Start.Date;
+
                             DateTime currTime = DateTime.Now;
                             DateTime appt = DateTime.Parse(when);
                         if ((currTime.AddDays(1).Month == appt.Month && currTime.AddDays(1).Day == appt.Day) || (currTime.AddDays(7).Day == appt.Day && currTime.AddDays(7).Month == appt.Month))
@@ -84,11 +82,6 @@ namespace CalendarQuickstart
                         {
                           Console.WriteLine("");
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("No upcoming events found.");
-                    }
                     
                 }
 
@@ -96,9 +89,7 @@ namespace CalendarQuickstart
                 {
                     int i = 0;
                     string when = eventItem.Start.DateTime.ToString();
-                    if (String.IsNullOrEmpty(when))
-                    {
-                        when = eventItem.Start.Date;
+
                         DateTime currTime = DateTime.Now;
                         DateTime appt = DateTime.Parse(when);
                         if ((currTime.AddDays(1).Month == appt.Month && currTime.AddDays(1).Day == appt.Day) || (currTime.AddDays(7).Day == appt.Day && currTime.AddDays(7).Month == appt.Month))
@@ -125,11 +116,6 @@ namespace CalendarQuickstart
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("No Attendees Found");
-                    }
                 }
 
 
