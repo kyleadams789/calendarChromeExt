@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
 
 namespace CalendarQuickstart
 {
@@ -26,6 +28,7 @@ namespace CalendarQuickstart
         static void Main(string[] args)
         {
             UserCredential credential;
+            
 
             using (var stream =
                 new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
@@ -115,6 +118,40 @@ namespace CalendarQuickstart
                         Console.WriteLine("No Attendees Found");
                     }
                 }
+
+                
+
+                foreach (var email in listOfEmails)
+                {
+                    var fromAddress = new MailAddress("taylor.j.grover@gmail.com", "Food & Care Coalition");
+                    var toAddress = new MailAddress(email, "");
+                    const string fromPassword = "";
+                    const string subject = "Subject";
+                    const string body = "Body";
+
+
+
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                        Timeout = 20000
+                    };
+                    using (var message = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = "Meeting ",
+                        Body = body
+                    })
+                    {
+                        smtp.Send(message);
+                    }
+                }
+                
+
                 Console.Read();
             }
         }
